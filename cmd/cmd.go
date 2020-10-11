@@ -39,8 +39,9 @@ func findArg(cmd string, cursor int) (t token, newCursor int, err error) {
 }
 
 // finds a string from a given command string
-func findString(cmd string, cursor int) (t token, newCursor int, err error) {
+func FindString(cmd string, cursor int) (t token, newCursor int, err error) {
 	// we expect a string should start with a quote
+	originalCursor := cursor
 	if !isQuote(rune(cmd[cursor])) {
 		return token{}, cursor, fmt.Errorf("Expected beginning `\"` or `'` in %q", cmd)
 	}
@@ -60,7 +61,7 @@ func findString(cmd string, cursor int) (t token, newCursor int, err error) {
 	}
 	cursor++
 
-	return newStringToken(cursor, string(vBytes)), cursor + 1, nil
+	return newStringToken(originalCursor, string(vBytes)), cursor + 1, nil
 }
 
 // takes in a command string and returns a slice
@@ -70,7 +71,7 @@ func tokenize(cmd string) ([]token, error) {
 	cursor := 0
 	for cursor < len(cmd) {
 		if isQuote(rune(cmd[cursor])) {
-			token, updatedCursor, err := findString(cmd, cursor+1)
+			token, updatedCursor, err := FindString(cmd, cursor+1)
 			if err != nil {
 				log.Fatalf("Encountered error trying to parse command `%s`: %s", cmd, err)
 			}
