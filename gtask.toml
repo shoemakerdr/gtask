@@ -1,0 +1,5 @@
+[meta]
+name = "project_tasks"
+
+[tasks.first]
+cmd = "python my_task.py \"hello world!\""
